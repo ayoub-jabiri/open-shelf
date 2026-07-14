@@ -1,7 +1,11 @@
+import HeroSection from "./_components/home/HeroSection";
+import FilterSection from "./_components/home/FilterSection";
+
 export default function Home() {
     return (
-        <div>
-            <h1>Hello World!</h1>
-        </div>
+        <>
+            <HeroSection />
+            <FilterSection />
+        </>
     );
 }

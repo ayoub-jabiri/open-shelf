@@ -18,7 +18,9 @@ export default function RootLayout({
         <html lang="en">
             <body className="min-h-full flex flex-col">
                 <AppHeader />
-                <main className="min-h-[calc(100vh-60px)]">{children}</main>
+                <main className="container min-h-[calc(100vh-60px)] py-8">
+                    {children}
+                </main>
                 <AppFooter />
             </body>
         </html>
