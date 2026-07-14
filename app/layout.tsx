@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import AppHeader from "./_components/layout/AppHeader";
+import AppFooter from "./_components/layout/AppFooter";
 
 export const metadata: Metadata = {
     title: "Open Shelf",
@@ -17,7 +18,8 @@ export default function RootLayout({
         <html lang="en">
             <body className="min-h-full flex flex-col">
                 <AppHeader />
-                <main>{children}</main>
+                <main className="min-h-[calc(100vh-60px)]">{children}</main>
+                <AppFooter />
             </body>
         </html>
     );

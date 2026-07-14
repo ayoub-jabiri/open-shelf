@@ -28,7 +28,7 @@ export default function AppHeader() {
     });
 
     return (
-        <header className="bg-white py-4">
+        <header className="bg-white py-4 border-b border-[#C7C4D8]">
             <div
                 className="container flex justify-between items-center
             "
