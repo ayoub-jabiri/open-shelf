@@ -1,6 +1,6 @@
 export default function FilterSection() {
     return (
-        <div className="bg-white p-4 border border-[#C7C4D8] rounded-md">
+        <section className="bg-white p-4 mb-4 border border-[#C7C4D8] rounded-md">
             <div className="grid grid-cols-12 items-end gap-3">
                 <fieldset className="fieldset col-span-12 md:col-span-5">
                     <legend className="fieldset-legend">Search Catalog</legend>
@@ -22,11 +22,11 @@ export default function FilterSection() {
                     </select>
                 </fieldset>
                 <div className="col-span-12 md:col-span-3">
-                    <button className="btn w-full bg-(--blue-color) text-white md:mb-1">
+                    <button className="btn w-full bg-(--blue-color) text-white ">
                         Apply Filter
                     </button>
                 </div>
             </div>
-        </div>
+        </section>
     );
 }

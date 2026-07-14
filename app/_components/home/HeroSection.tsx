@@ -1,6 +1,6 @@
 export default function HeroSection() {
     return (
-        <div className="bg-(--blue-color) text-[#DAD7FF] p-6 mb-4 rounded-md">
+        <section className="bg-(--blue-color) text-[#DAD7FF] p-6 mb-4 rounded-md">
             <h1 className="text-2xl font-bold mb-2">
                 Curating the World's Knowledge.
             </h1>
@@ -10,6 +10,6 @@ export default function HeroSection() {
                 hundreds of academic and literary works with scholarly
                 precision.
             </p>
-        </div>
+        </section>
     );
 }
