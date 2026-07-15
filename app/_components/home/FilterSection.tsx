@@ -7,7 +7,7 @@ export default function FilterSection() {
                     <input
                         type="text"
                         className="input w-full"
-                        placeholder="Enter title, author, or ISBN..."
+                        placeholder="Enter title or author..."
                     />
                 </fieldset>
                 <fieldset className="fieldset col-span-12 md:col-span-4">
