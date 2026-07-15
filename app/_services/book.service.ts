@@ -7,3 +7,8 @@ export const getSingleBook = async (query: { _id?: string; isbn?: string }) =>
     await BookSchema.findOne(query);
 
 export const saveNewBook = async (book: Book) => await BookSchema.create(book);
+
+export const deleteBook = async (bookId: string) => {
+    await BookSchema.findByIdAndDelete(bookId);
+    console.log("deleted");
+};

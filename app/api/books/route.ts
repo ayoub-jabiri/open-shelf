@@ -57,7 +57,7 @@ export async function POST(req: Request) {
             description,
         });
         return NextResponse.json(
-            { message: "The book has been added succesfully!", book: newBook },
+            { message: "The book has been added successfully!", book: newBook },
             { status: 201 }
         );
     } catch (error) {
