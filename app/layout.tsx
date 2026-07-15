@@ -16,7 +16,10 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className="min-h-full flex flex-col">
+            <body
+                className="min-h-full flex flex-col"
+                suppressHydrationWarning={true}
+            >
                 <AppHeader />
                 <main className="container min-h-[calc(100vh-60px)] py-8">
                     {children}
