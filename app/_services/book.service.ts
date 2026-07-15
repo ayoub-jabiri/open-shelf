@@ -3,4 +3,7 @@ import { type Book } from "../_types/book";
 
 export const getBooks = async () => await BookSchema.find();
 
+export const getSingleBook = async (query: { id?: string; isbn?: string }) =>
+    await BookSchema.findOne(query);
+
 export const saveNewBook = async (book: Book) => await BookSchema.create(book);

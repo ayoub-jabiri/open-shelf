@@ -1,4 +1,4 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document, models } from "mongoose";
 
 interface BookI extends Document {
     image: string;
@@ -65,4 +65,4 @@ const bookschema = new Schema<BookI>(
     }
 );
 
-export default model<BookI>("Book", bookschema);
+export default models.Book || model<BookI>("Book", bookschema);

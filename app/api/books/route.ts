@@ -1,5 +1,9 @@
 import { dbConnect } from "@/app/_lib/db";
-import { getBooks } from "@/app/_services/book.service";
+import {
+    getSingleBook,
+    getBooks,
+    saveNewBook,
+} from "@/app/_services/book.service";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -10,18 +14,56 @@ export async function GET() {
 
         return NextResponse.json({ books }, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ error: error }, { status: 500 });
+        return NextResponse.json(
+            { message: "Internal error!", error: error },
+            { status: 500 }
+        );
     }
 }
 
 export async function POST(req: Request) {
     await dbConnect();
 
-    const body = await req.json();
+    const {
+        image,
+        title,
+        author,
+        isbn,
+        category,
+        status,
+        yearOfPublication,
+        description,
+    } = await req.json();
 
     try {
-        return NextResponse.json({}, { status: 200 });
+        const bookCheck = await getSingleBook({ isbn });
+        if (bookCheck) {
+            return NextResponse.json(
+                {
+                    message: "The book is already saved!",
+                },
+                { status: 400 }
+            );
+        }
+
+        const newBook = await saveNewBook({
+            image,
+            title,
+            author,
+            isbn,
+            category,
+            status,
+            yearOfPublication,
+            description,
+        });
+        return NextResponse.json(
+            { message: "The book has been added succesfully!", book: newBook },
+            { status: 201 }
+        );
     } catch (error) {
-        return NextResponse.json({ error: error }, { status: 500 });
+        return NextResponse.json(
+            { message: "Internal error!", error: error },
+            { status: 500 }
+        );
     }
 }
