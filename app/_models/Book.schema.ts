@@ -54,7 +54,7 @@ const bookschema = new Schema<BookI>(
         timestamps: true,
         toJSON: {
             transform(doc, ret) {
-                const { _id, ...rest } = ret;
+                const { _id, __v, ...rest } = ret;
 
                 return {
                     id: _id.toHexString(),
