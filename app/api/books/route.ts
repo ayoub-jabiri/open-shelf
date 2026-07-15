@@ -1,8 +1,17 @@
 import { dbConnect } from "@/app/_lib/db";
+import { getBooks } from "@/app/_services/book.service";
+import { NextResponse } from "next/server";
 
 export async function GET() {
     await dbConnect();
-    return Response.json({ name: "Ahmed" });
+
+    try {
+        const books = await getBooks();
+
+        return NextResponse.json({ books }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ error: error }, { status: 500 });
+    }
 }
 
 export async function POST(req: Request) {
@@ -10,5 +19,9 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    return Response.json({ name: "Ahmed" });
+    try {
+        return NextResponse.json({}, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ error: error }, { status: 500 });
+    }
 }

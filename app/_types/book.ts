@@ -8,4 +8,6 @@ export interface Book {
     status: string;
     yearOfPublication: number;
     description: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
