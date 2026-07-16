@@ -16,7 +16,6 @@ export default function FilterSection() {
                         defaultValue="Pick a color"
                         className="select w-full"
                     >
-                        <option disabled={true}>Status Filter</option>
                         <option value="available">Available</option>
                         <option value="borrowed">Borrowed</option>
                     </select>
