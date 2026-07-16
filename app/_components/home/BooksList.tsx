@@ -75,21 +75,22 @@ export default function BooksList() {
     const [books, setBooks] = useState<Book[] | null>(null);
     const [error, setError] = useState<null | string>(null);
 
-    useEffect(() => {
-        const getBooks = async () => {
-            try {
-                const { data } = await axios.get("/api/books");
-                setBooks(data.books);
-            } catch (error: unknown) {
-                const errorMessage: string =
-                    error.response?.statusText || "Something went wrong!";
+    const getBooks = async () => {
+        try {
+            const { data } = await axios.get("/api/books");
+            setBooks(data.books);
+        } catch (error: unknown) {
+            const errorMessage: string =
+                error.response?.statusText || "Something went wrong!";
 
-                setError(errorMessage);
-                setBooks(null);
-            } finally {
-                setLoading(false);
-            }
-        };
+            setError(errorMessage);
+            setBooks(null);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         getBooks();
     }, []);
 
@@ -108,7 +109,11 @@ export default function BooksList() {
                 {books?.length &&
                     books != null &&
                     books.map((book: Book) => (
-                        <BookCard key={book.id} book={book} />
+                        <BookCard
+                            key={book.id}
+                            book={book}
+                            getBooks={getBooks}
+                        />
                     ))}
             </div>
 

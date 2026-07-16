@@ -1,11 +1,22 @@
 import { type Book } from "@/app/_types/book";
+import axios from "axios";
 import Link from "next/link";
 
 interface BookCardProps {
     book: Book;
+    getBooks: () => void;
 }
 
-export default function BookCard({ book }: BookCardProps) {
+export default function BookCard({ book, getBooks }: BookCardProps) {
+    async function handleDeleteBook(): Promise<void> {
+        try {
+            await axios.delete(`/api/books/${book.id}`);
+            getBooks();
+        } catch (error) {
+            console.log(error.response);
+        }
+    }
+
     return (
         <div className="col-span-12 md:col-span-6 lg:col-span-3 self-stretch bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-slate-300 inline-flex flex-col justify-start items-start overflow-hidden">
             <div className="self-stretch relative flex flex-col justify-center items-start overflow-hidden">
@@ -72,7 +83,10 @@ export default function BookCard({ book }: BookCardProps) {
                                 Edit
                             </div>
                         </button>
-                        <button className="size- w-[calc(50%-4px)] py-1.5 rounded-md outline outline-1 outline-offset-[-1px] outline-red-700 inline-flex flex-col justify-center items-center cursor-pointer">
+                        <button
+                            className="size- w-[calc(50%-4px)] py-1.5 rounded-md outline outline-1 outline-offset-[-1px] outline-red-700 inline-flex flex-col justify-center items-center cursor-pointer"
+                            onClick={handleDeleteBook}
+                        >
                             <div className="text-center justify-center text-red-700 text-xs font-semibold font-['Inter'] leading-4 tracking-wide">
                                 Delete
                             </div>
