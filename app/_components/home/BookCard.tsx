@@ -67,12 +67,12 @@ export default function BookCard({ book }: BookCardProps) {
                         </div>
                     </Link>
                     <div className="self-stretch inline-flex justify-center items-start gap-2">
-                        <button className="size- max-md:w-[calc(50%-4px)] md:w-[100px] py-1.5 rounded-md outline outline-1 outline-offset-[-1px] outline-indigo-700 inline-flex flex-col justify-center items-center cursor-pointer">
+                        <button className="size- w-[calc(50%-4px)] py-1.5 rounded-md outline outline-1 outline-offset-[-1px] outline-indigo-700 inline-flex flex-col justify-center items-center cursor-pointer">
                             <div className="text-center justify-center text-indigo-700 text-xs font-semibold font-['Inter'] leading-4 tracking-wide">
                                 Edit
                             </div>
                         </button>
-                        <button className="size- max-md:w-[calc(50%-4px)] md:w-[100px] py-1.5 rounded-md outline outline-1 outline-offset-[-1px] outline-red-700 inline-flex flex-col justify-center items-center cursor-pointer">
+                        <button className="size- w-[calc(50%-4px)] py-1.5 rounded-md outline outline-1 outline-offset-[-1px] outline-red-700 inline-flex flex-col justify-center items-center cursor-pointer">
                             <div className="text-center justify-center text-red-700 text-xs font-semibold font-['Inter'] leading-4 tracking-wide">
                                 Delete
                             </div>
