@@ -6,7 +6,7 @@ export interface Book {
     isbn: string;
     category: string;
     status: string;
-    yearOfPublication: number;
+    yearOfPublication: number | string;
     description: string;
     createdAt?: Date;
     updatedAt?: Date;
