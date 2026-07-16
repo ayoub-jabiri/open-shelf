@@ -4,11 +4,23 @@ import {
     getSingleBook,
     updatedBook,
 } from "@/app/_services/book.service";
+import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 
 interface RouteParams {
     params: Promise<{ id: string }>;
 }
+
+const bookNotFoundResponse = () => {
+    return NextResponse.json({ message: "Book Not Found!" }, { status: 404 });
+};
+
+const invalideIdResponse = () => {
+    return NextResponse.json(
+        { message: "Invalid book ID format!" },
+        { status: 400 }
+    );
+};
 
 export async function GET(req: Request, { params }: RouteParams) {
     await dbConnect();
@@ -16,7 +28,13 @@ export async function GET(req: Request, { params }: RouteParams) {
     const { id } = await params;
 
     try {
+        if (!mongoose.Types.ObjectId.isValid(id)) return invalideIdResponse();
+
         const book = await getSingleBook({ _id: id });
+
+        if (!book) {
+            return bookNotFoundResponse();
+        }
 
         return NextResponse.json({ book }, { status: 200 });
     } catch (error) {
@@ -44,6 +62,8 @@ export async function PUT(req: Request, { params }: RouteParams) {
     } = await req.json();
 
     try {
+        if (!mongoose.Types.ObjectId.isValid(id)) return invalideIdResponse();
+
         const bookCheck = await getSingleBook({ _id: id });
         if (!bookCheck) {
             return NextResponse.json(
@@ -82,6 +102,8 @@ export async function DELETE(req: Request, { params }: RouteParams) {
     const { id } = await params;
 
     try {
+        if (!mongoose.Types.ObjectId.isValid(id)) return invalideIdResponse();
+
         await deleteBook(id);
 
         return NextResponse.json(

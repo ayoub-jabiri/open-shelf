@@ -5,7 +5,6 @@ export default function Error({ errorMessage }: { errorMessage: string }) {
         <div className="col-span-12 h-[200px] flex flex-col justify-center items-center rounded-md">
             <RiErrorWarningLine className="text-(--text-color)" />
             <p>{errorMessage}</p>
-            <button>Reload</button>
         </div>
     );
 }
