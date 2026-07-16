@@ -66,12 +66,7 @@ export async function PUT(req: Request, { params }: RouteParams) {
 
         const bookCheck = await getSingleBook({ _id: id });
         if (!bookCheck) {
-            return NextResponse.json(
-                {
-                    message: "The book is not saved yet!",
-                },
-                { status: 404 }
-            );
+            return bookNotFoundResponse();
         }
 
         const book = await updatedBook(id, {
@@ -103,6 +98,12 @@ export async function DELETE(req: Request, { params }: RouteParams) {
 
     try {
         if (!mongoose.Types.ObjectId.isValid(id)) return invalideIdResponse();
+
+        const book = await getSingleBook({ _id: id });
+
+        if (!book) {
+            return bookNotFoundResponse();
+        }
 
         await deleteBook(id);
 

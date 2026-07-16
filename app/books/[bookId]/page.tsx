@@ -38,11 +38,6 @@ export default function Details({ params }: DetailsProps) {
         getBookData();
     }, []);
 
-    console.log("####");
-    console.log(book);
-
-    console.log("####");
-
     return (
         <>
             <section className="mb-4">
@@ -56,9 +51,9 @@ export default function Details({ params }: DetailsProps) {
                     </ul>
                 </div>
             </section>
-            <section className="grid grid-cols-12 gap-5">
+            <section className="grid grid-cols-12 max-md:gap-y-5 md:gap-x-20">
                 {loading && <Loading />}
-                {book && <BookDetails />}
+                {book && <BookDetails book={book} />}
                 {error && <Error errorMessage={error} />}
             </section>
         </>
