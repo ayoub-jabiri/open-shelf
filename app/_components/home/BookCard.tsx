@@ -4,6 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useState } from "react";
 import AlertPopup from "../global/AlertPopup";
+import EditBookModal from "../books/EditBookModal";
 
 interface BookCardProps {
     book: Book;
@@ -11,7 +12,12 @@ interface BookCardProps {
 }
 
 export default function BookCard({ book, getBooks }: BookCardProps) {
+    const [showEditModal, setShowEditModal] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<null | string>(null);
+
+    function handleEditBook() {
+        setShowEditModal(true);
+    }
 
     async function handleDeleteBook(): Promise<void> {
         try {
@@ -87,7 +93,10 @@ export default function BookCard({ book, getBooks }: BookCardProps) {
                             </div>
                         </Link>
                         <div className="self-stretch inline-flex justify-center items-start gap-2">
-                            <button className="size- w-[calc(50%-4px)] py-1.5 rounded-md outline outline-1 outline-offset-[-1px] outline-indigo-700 inline-flex flex-col justify-center items-center cursor-pointer">
+                            <button
+                                className="size- w-[calc(50%-4px)] py-1.5 rounded-md outline outline-1 outline-offset-[-1px] outline-indigo-700 inline-flex flex-col justify-center items-center cursor-pointer"
+                                onClick={handleEditBook}
+                            >
                                 <div className="text-center justify-center text-indigo-700 text-xs font-semibold font-['Inter'] leading-4 tracking-wide">
                                     Edit
                                 </div>
@@ -104,6 +113,13 @@ export default function BookCard({ book, getBooks }: BookCardProps) {
                     </div>
                 </div>
             </div>
+            {showEditModal && (
+                <EditBookModal
+                    book={book}
+                    setShowEditModal={setShowEditModal}
+                    getBooks={getBooks}
+                />
+            )}
             {errorMessage && (
                 <AlertPopup
                     isSuccess={false}
