@@ -96,7 +96,7 @@ export default function BooksList() {
 
     return (
         <>
-            <FilterSection />
+            <FilterSection setBooks={setBooks} />
 
             {loading && <Loading />}
 

@@ -8,12 +8,18 @@ export const getBooks = async (queries: {
     console.log(queries);
 
     const filter: {
-        $or?: ({ title: string } | { author: string })[];
+        $or?: (
+            | { title: { $regex: string; $options: string } }
+            | { author: { $regex: string; $options: string } }
+        )[];
         status?: string;
     } = {};
 
     if (queries.search) {
-        filter.$or = [{ title: queries.search }, { author: queries.search }];
+        filter.$or = [
+            { title: { $regex: queries.search, $options: "i" } },
+            { author: { $regex: queries.search, $options: "i" } },
+        ];
     }
 
     if (queries.status) {
