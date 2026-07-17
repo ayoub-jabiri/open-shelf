@@ -35,11 +35,10 @@ export default function AddNewBook() {
                 const { data } = await axios.post(`/api/books`, newBookData);
 
                 setSuccessMessage(data.message);
-                console.log("Added");
             } catch (error: unknown) {
                 console.log(error.response);
                 setErrorMessage(
-                    error.response.data?.message || "Something went wrong!"
+                    error.response?.data?.message || "Something went wrong!"
                 );
             }
         }
