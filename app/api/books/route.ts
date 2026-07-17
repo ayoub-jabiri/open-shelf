@@ -4,13 +4,29 @@ import {
     getBooks,
     saveNewBook,
 } from "@/app/_services/book.service";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
     await dbConnect();
 
+    const { searchParams } = req.nextUrl;
+
+    const queries: { search?: string; filter?: string } = {};
+
+    if (searchParams.has("search")) {
+        if (searchParams.get("search")) {
+            queries.search = searchParams.get("search");
+        }
+    }
+
+    if (searchParams.has("status")) {
+        if (searchParams.get("status")) {
+            queries.status = searchParams.get("status");
+        }
+    }
+
     try {
-        const books = await getBooks();
+        const books = await getBooks(queries);
 
         return NextResponse.json({ books }, { status: 200 });
     } catch (error) {

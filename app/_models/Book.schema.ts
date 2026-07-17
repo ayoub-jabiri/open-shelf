@@ -21,10 +21,12 @@ const bookschema = new Schema<BookI>(
             type: String,
             required: true,
             minLength: [3, "Title must be at least 3 characters"],
+            lowercase: true,
         },
         author: {
             type: String,
             required: true,
+            lowercase: true,
         },
         isbn: {
             type: String,
@@ -39,6 +41,7 @@ const bookschema = new Schema<BookI>(
             type: String,
             required: true,
             enum: ["available", "borrowed"],
+            lowercase: true,
         },
         yearOfPublication: {
             type: Number,
