@@ -1,7 +1,33 @@
 import BookSchema from "@/app/_models/book.schema";
 import { type Book } from "../_types/book";
 
-export const getBooks = async () => await BookSchema.find();
+export const getBooks = async (queries: {
+    search?: string;
+    status?: string;
+}) => {
+    console.log(queries);
+
+    const filter: {
+        $or?: (
+            | { title: { $regex: string; $options: string } }
+            | { author: { $regex: string; $options: string } }
+        )[];
+        status?: string;
+    } = {};
+
+    if (queries.search) {
+        filter.$or = [
+            { title: { $regex: queries.search, $options: "i" } },
+            { author: { $regex: queries.search, $options: "i" } },
+        ];
+    }
+
+    if (queries.status) {
+        filter.status = queries.status;
+    }
+
+    return await BookSchema.find(filter);
+};
 
 export const getSingleBook = async (query: { _id?: string; isbn?: string }) =>
     await BookSchema.findOne(query);
