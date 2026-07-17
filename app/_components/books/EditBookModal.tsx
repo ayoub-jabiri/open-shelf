@@ -1,23 +1,28 @@
 "use client";
-import { RiSave2Line } from "@remixicon/react";
-import Link from "next/link";
-import React, { useState } from "react";
-import { type Book } from "../_types/book";
+import { useState } from "react";
+import AlertPopup from "../global/AlertPopup";
+import { Book } from "@/app/_types/book";
 import axios from "axios";
-import AlertPopup from "../_components/global/AlertPopup";
 
-export default function AddNewBook() {
+export default function EditBookModal({
+    book,
+    setShowEditModal,
+    getBooks,
+}: {
+    book: Book;
+    setShowEditModal: React.Dispatch<React.SetStateAction<boolean>>;
+    getBooks: () => void;
+}) {
     const [newBookData, setNewBookData] = useState<Book>({
-        image: "",
-        title: "",
-        author: "",
-        isbn: "",
-        category: "",
-        status: "available",
-        yearOfPublication: "",
-        description: "",
+        image: book?.image || "",
+        title: book?.title || "",
+        author: book?.author || "",
+        isbn: book?.isbn || "",
+        category: book?.category || "",
+        status: book?.status || "available",
+        yearOfPublication: book?.yearOfPublication || "",
+        description: book?.description || "",
     });
-    const [successMessage, setSuccessMessage] = useState<null | string>(null);
     const [errorMessage, setErrorMessage] = useState<null | string>(null);
 
     function handleChange(e: React.ChangeEvent): void {
@@ -27,14 +32,19 @@ export default function AddNewBook() {
         }));
     }
 
+    function handleCancel() {
+        setShowEditModal(false);
+    }
+
     async function handleSaveBook(e: React.SubmitEvent): Promise<void> {
         e.preventDefault();
 
         if (Object.values(newBookData).every(Boolean)) {
             try {
-                const { data } = await axios.post(`/api/books`, newBookData);
+                await axios.put(`/api/books/${book.id}`, newBookData);
 
-                setSuccessMessage(data.message);
+                getBooks();
+                setShowEditModal(false);
             } catch (error: unknown) {
                 console.log(error.response);
                 setErrorMessage(
@@ -45,29 +55,12 @@ export default function AddNewBook() {
     }
 
     return (
-        <>
-            <div className="flex flex-col justify-start items-start gap-6">
-                <section>
-                    <div className="breadcrumbs text-sm">
-                        <ul>
-                            <li>
-                                <Link href="/">Home</Link>
-                            </li>
-
-                            <li>Add New Book</li>
-                        </ul>
-                    </div>
-                </section>
+        <div className="fixed inset-0 min-h-screen z-50 bg-(--bg-color) overflow-auto">
+            <div className="container py-8 flex flex-col justify-start items-start gap-6">
                 <section className="self-stretch flex flex-col justify-start items-start gap-2">
                     <div className="self-stretch flex flex-col justify-start items-start">
                         <div className="self-stretch justify-center text-zinc-900 text-4xl font-bold font-['Inter'] leading-10">
-                            Add New Book to Catalog
-                        </div>
-                    </div>
-                    <div className="self-stretch flex flex-col justify-start items-start">
-                        <div className="self-stretch justify-center text-gray-700 text-base font-normal font-['Inter'] leading-6">
-                            Fill in the professional details to index this
-                            volume in the digital archives.
+                            Edit Book: {book?.title}
                         </div>
                     </div>
                 </section>
@@ -175,24 +168,22 @@ export default function AddNewBook() {
                         ></textarea>
                     </fieldset>
                     <div className="self-stretch pt-4 mt-4 border-t border-slate-300 inline-flex justify-end items-center gap-4">
-                        <button className="size- px-8 py-2.5 bg-indigo-700 rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] flex justify-start items-center gap-2 cursor-pointer">
-                            <div className="size- inline-flex flex-col justify-start items-center">
-                                <RiSave2Line className="text-white" />
+                        <button
+                            className="size- px-6 py-2.5 rounded-lg outline outline-1 outline-offset-[-1px] outline-indigo-700 inline-flex flex-col justify-center items-center cursor-pointer"
+                            onClick={handleCancel}
+                        >
+                            <div className="text-center justify-center text-indigo-700 text-sm font-medium font-['Inter'] leading-5">
+                                Cancel
                             </div>
+                        </button>
+                        <button className="size- px-8 py-2.5 bg-indigo-700 rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] flex justify-start items-center gap-2 cursor-pointer">
                             <div className="text-center justify-center text-white text-sm font-medium font-['Inter'] leading-5">
-                                Save Book
+                                Save Changes
                             </div>
                         </button>
                     </div>
                 </form>
             </div>
-            {successMessage && (
-                <AlertPopup
-                    isSuccess={true}
-                    message={successMessage}
-                    setMessage={setSuccessMessage}
-                />
-            )}
             {errorMessage && (
                 <AlertPopup
                     isSuccess={false}
@@ -200,6 +191,6 @@ export default function AddNewBook() {
                     setMessage={setErrorMessage}
                 />
             )}
-        </>
+        </div>
     );
 }
