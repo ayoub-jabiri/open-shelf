@@ -1,10 +1,12 @@
 import { dbConnect } from "@/app/_lib/db";
+import { bookSchema } from "@/app/_schemas/book";
 import {
     getSingleBook,
     getBooks,
     saveNewBook,
 } from "@/app/_services/book.service";
 import { NextRequest, NextResponse } from "next/server";
+import z from "zod";
 
 export async function GET(req: NextRequest) {
     await dbConnect();
@@ -52,6 +54,19 @@ export async function POST(req: Request) {
     } = await req.json();
 
     try {
+        const validateData = bookSchema.parse({
+            image,
+            title,
+            author,
+            isbn,
+            category,
+            status,
+            yearOfPublication,
+            description,
+        });
+
+        console.log(validateData);
+
         const bookCheck = await getSingleBook({ isbn });
         if (bookCheck) {
             return NextResponse.json(
@@ -76,7 +91,18 @@ export async function POST(req: Request) {
             { message: "The book has been added successfully!", book: newBook },
             { status: 201 }
         );
-    } catch (error) {
+    } catch (error: unknown) {
+        if (error instanceof z.ZodError) {
+            console.log(error);
+            return NextResponse.json(
+                {
+                    message: "Validation Failed!",
+                    errors: [...JSON.parse(error)],
+                },
+                { status: 400 }
+            );
+        }
+
         return NextResponse.json(
             { message: "Internal error!", error: error },
             { status: 500 }
