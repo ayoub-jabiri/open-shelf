@@ -3,8 +3,28 @@ import { RiSave2Line } from "@remixicon/react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { type Book } from "../_types/book";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import AlertPopup from "../_components/global/AlertPopup";
+
+interface ZodError {
+    origin: string;
+    code: string;
+    minimum: number;
+    inclusive: boolean;
+    path: string[];
+    message: string;
+}
+
+interface FormErrors {
+    title?: { error: string };
+    author?: { error: string };
+    image?: { error: string };
+    isbn?: { error: string };
+    category?: { error: string };
+    status?: { error: string };
+    yearOfPublication?: { error: string };
+    description?: { error: string };
+}
 
 export default function AddNewBook() {
     const [newBookData, setNewBookData] = useState<Book>({
@@ -17,6 +37,7 @@ export default function AddNewBook() {
         yearOfPublication: "",
         description: "",
     });
+    const [formErrors, setFormErros] = useState<FormErrors | null>(null);
     const [successMessage, setSuccessMessage] = useState<null | string>(null);
     const [errorMessage, setErrorMessage] = useState<null | string>(null);
 
@@ -30,17 +51,27 @@ export default function AddNewBook() {
     async function handleSaveBook(e: React.SubmitEvent): Promise<void> {
         e.preventDefault();
 
-        if (Object.values(newBookData).every(Boolean)) {
-            try {
-                const { data } = await axios.post(`/api/books`, newBookData);
+        try {
+            const { data } = await axios.post(`/api/books`, newBookData);
 
-                setSuccessMessage(data.message);
-            } catch (error: unknown) {
-                console.log(error.response);
-                setErrorMessage(
-                    error.response?.data?.message || "Something went wrong!"
-                );
+            setSuccessMessage(data.message);
+            setFormErros(null);
+        } catch (error: unknown) {
+            if (error.response?.data?.errors) {
+                const errors: FormErrors = {};
+
+                error.response?.data?.errors.map((error: ZodError) => {
+                    errors[error.path[0]] = {
+                        error: error.message,
+                    };
+                });
+
+                setFormErros(errors);
             }
+
+            setErrorMessage(
+                error.response?.data?.message || "Something went wrong!"
+            );
         }
     }
 
@@ -60,15 +91,15 @@ export default function AddNewBook() {
                 </section>
                 <section className="self-stretch flex flex-col justify-start items-start gap-2">
                     <div className="self-stretch flex flex-col justify-start items-start">
-                        <div className="self-stretch justify-center text-zinc-900 text-4xl font-bold font-['Inter'] leading-10">
+                        <h1 className="self-stretch justify-center text-zinc-900 text-4xl font-bold font-['Inter'] leading-10">
                             Add New Book to Catalog
-                        </div>
+                        </h1>
                     </div>
                     <div className="self-stretch flex flex-col justify-start items-start">
-                        <div className="self-stretch justify-center text-gray-700 text-base font-normal font-['Inter'] leading-6">
+                        <p className="self-stretch justify-center text-gray-700 text-base font-normal font-['Inter'] leading-6">
                             Fill in the professional details to index this
                             volume in the digital archives.
-                        </div>
+                        </p>
                     </div>
                 </section>
                 <form
@@ -85,6 +116,9 @@ export default function AddNewBook() {
                             value={newBookData.title}
                             onChange={handleChange}
                         />
+                        <p className="text-[#F44336] text-sm mt-2">
+                            {formErrors?.title && `* ${formErrors.title.error}`}
+                        </p>
                     </fieldset>
 
                     <div className="flex justify-between">
@@ -98,6 +132,10 @@ export default function AddNewBook() {
                                 value={newBookData.author}
                                 onChange={handleChange}
                             />
+                            <p className="text-[#F44336] text-sm mt-2">
+                                {formErrors?.author &&
+                                    `* ${formErrors.author.error}`}
+                            </p>
                         </fieldset>
                         <fieldset className="fieldset w-[49%]">
                             <legend className="fieldset-legend">Image</legend>
@@ -109,6 +147,10 @@ export default function AddNewBook() {
                                 value={newBookData.image}
                                 onChange={handleChange}
                             />
+                            <p className="text-[#F44336] text-sm mt-2">
+                                {formErrors?.image &&
+                                    `* ${formErrors.image.error}`}
+                            </p>
                         </fieldset>
                     </div>
                     <div className="flex justify-between">
@@ -124,6 +166,10 @@ export default function AddNewBook() {
                                 value={newBookData.category}
                                 onChange={handleChange}
                             />
+                            <p className="text-[#F44336] text-sm mt-2">
+                                {formErrors?.category &&
+                                    `* ${formErrors.category.error}`}
+                            </p>
                         </fieldset>
                         <fieldset className="fieldset w-[49%]">
                             <legend className="fieldset-legend">ISBN</legend>
@@ -135,6 +181,10 @@ export default function AddNewBook() {
                                 value={newBookData.isbn}
                                 onChange={handleChange}
                             />
+                            <p className="text-[#F44336] text-sm mt-2">
+                                {formErrors?.isbn &&
+                                    `* ${formErrors.isbn.error}`}
+                            </p>
                         </fieldset>
                     </div>
                     <div className="flex justify-between">
@@ -149,6 +199,10 @@ export default function AddNewBook() {
                                 <option value="available">Available</option>
                                 <option value="borrowed">Borrowed</option>
                             </select>
+                            <p className="text-[#F44336] text-sm mt-2">
+                                {formErrors?.status &&
+                                    `* ${formErrors.status.error}`}
+                            </p>
                         </fieldset>
                         <fieldset className="fieldset w-[49%]">
                             <legend className="fieldset-legend">
@@ -162,6 +216,10 @@ export default function AddNewBook() {
                                 value={newBookData.yearOfPublication}
                                 onChange={handleChange}
                             />
+                            <p className="text-[#F44336] text-sm mt-2">
+                                {formErrors?.yearOfPublication &&
+                                    `* ${formErrors.yearOfPublication.error}`}
+                            </p>
                         </fieldset>
                     </div>
                     <fieldset>
@@ -173,6 +231,10 @@ export default function AddNewBook() {
                             value={newBookData.description}
                             onChange={handleChange}
                         ></textarea>
+                        <p className="text-[#F44336] text-sm mt-2">
+                            {formErrors?.description &&
+                                `* ${formErrors.description.error}`}
+                        </p>
                     </fieldset>
                     <div className="self-stretch pt-4 mt-4 border-t border-slate-300 inline-flex justify-end items-center gap-4">
                         <button className="size- px-8 py-2.5 bg-indigo-700 rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] flex justify-start items-center gap-2 cursor-pointer">
